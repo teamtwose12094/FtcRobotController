@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+//import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 public abstract class Autonomous extends LinearOpMode {
     //Declare OpMode members.
@@ -509,142 +509,142 @@ public abstract class Autonomous extends LinearOpMode {
     // Initialize Vuforia and Tensorflow Object Detection
     // All encompassing method for initializng object recognition. Called prior to runpath in OP modes and after start has been pressed
     // Can this be ran prior to waitForStart()?
-    public void initVuforia() {
-        if (opModeIsActive()) {
-            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-            parameters.vuforiaLicenseKey = VUFORIA_KEY;
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-            //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-            vuforia = ClassFactory.getInstance().createVuforia(parameters);
-            CameraDevice.getInstance().setFlashTorchMode(true);
-        }
-    }
-    public void initTFOD() {
-        if (opModeIsActive()) {
-            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-            tfodParameters.minResultConfidence = 0.70f;
-            tfodParameters.isModelTensorFlow2 = true;
-            tfodParameters.inputSize = 320;
-            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-            if (tfod != null) {
-                tfod.activate();
-                tfod.setZoom(1, 16.0 / 9.0);
-            }
-        }
-    }
-    public void initVuforiaTFOD() {
-        //Vuforia
-        initVuforia();
-        //TFOD
-        initTFOD();
-    }
+//    public void initVuforia() {
+//        if (opModeIsActive()) {
+//            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+//            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+//            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//            //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+//            vuforia = ClassFactory.getInstance().createVuforia(parameters);
+//            CameraDevice.getInstance().setFlashTorchMode(true);
+//        }
+//    }
+//    public void initTFOD() {
+//        if (opModeIsActive()) {
+//            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+//            tfodParameters.minResultConfidence = 0.70f;
+//            tfodParameters.isModelTensorFlow2 = true;
+//            tfodParameters.inputSize = 320;
+//            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+//            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+//            if (tfod != null) {
+//                tfod.activate();
+//                tfod.setZoom(1, 16.0 / 9.0);
+//            }
+//        }
+//    }
+//    public void initVuforiaTFOD() {
+//        //Vuforia
+//        initVuforia();
+//        //TFOD
+//        initTFOD();
+//    }
 
     // (Wait until specific thing is found)
-    public Recognition findCone() {
-        boolean dontExit = true;
-        double start = System.currentTimeMillis();
-        double timeOut = 5000;
-        double i = 0;
-        Recognition cone = null;
-        while (dontExit && opModeIsActive()) {
-            cone = isLookingAtCone();
-            if ((System.currentTimeMillis() - start > timeOut) || cone != null) {
-                dontExit = false;
-                telemetry.addData("Ex","Ex");telemetry.update();
-            }
-        }
-        if (opModeIsActive()) {
-            sleep(3000);
-        }
-        if (opModeIsActive()) {
-            cone = isLookingAtCone();
-            telemetry.addData("Ex", "Ex2");
-            telemetry.update();
-        }
-        return cone;
-    }
+//    public Recognition findCone() {
+//        boolean dontExit = true;
+//        double start = System.currentTimeMillis();
+//        double timeOut = 5000;
+//        double i = 0;
+//        Recognition cone = null;
+//        while (dontExit && opModeIsActive()) {
+//            cone = isLookingAtCone();
+//            if ((System.currentTimeMillis() - start > timeOut) || cone != null) {
+//                dontExit = false;
+//                telemetry.addData("Ex","Ex");telemetry.update();
+//            }
+//        }
+//        if (opModeIsActive()) {
+//            sleep(3000);
+//        }
+//        if (opModeIsActive()) {
+//            cone = isLookingAtCone();
+//            telemetry.addData("Ex", "Ex2");
+//            telemetry.update();
+//        }
+//        return cone;
+//    }
 
     // (Check for a specific thing)
-    public Recognition isLookingAtCone() {
-        //Recognition cone = null;
-        Recognition bestRecognition = null;
-        float highestRecogniton = 0;
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        telemetry.addData("F","F");
-        if (updatedRecognitions == null) {updatedRecognitions = previousRecognitions;}
-        previousRecognitions = updatedRecognitions;
-        if (updatedRecognitions != null && opModeIsActive()) {
-            telemetry.addData("T","T");
-            int i = 0;
-            for (Recognition recognition : updatedRecognitions) {
-                i++;
-                if ((recognition.getLabel().equals("Green") || recognition.getLabel().equals("Orange") || recognition.getLabel().equals("Purple")) && recognition.getConfidence() > highestRecogniton) {
-                    highestRecogniton = recognition.getConfidence();
-                    bestRecognition = recognition;
-                }
-            }
-        }
-        return bestRecognition;
-    }
+//    public Recognition isLookingAtCone() {
+//        //Recognition cone = null;
+//        Recognition bestRecognition = null;
+//        float highestRecogniton = 0;
+//        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+//        telemetry.addData("F","F");
+//        if (updatedRecognitions == null) {updatedRecognitions = previousRecognitions;}
+//        previousRecognitions = updatedRecognitions;
+//        if (updatedRecognitions != null && opModeIsActive()) {
+//            telemetry.addData("T","T");
+//            int i = 0;
+//            for (Recognition recognition : updatedRecognitions) {
+//                i++;
+//                if ((recognition.getLabel().equals("Green") || recognition.getLabel().equals("Orange") || recognition.getLabel().equals("Purple")) && recognition.getConfidence() > highestRecogniton) {
+//                    highestRecogniton = recognition.getConfidence();
+//                    bestRecognition = recognition;
+//                }
+//            }
+//        }
+//        return bestRecognition;
+//    }
 
     // (Take recognition and move to position)
-    public void navigateToCone() {
-        initVuforia();
-        move(12.5,0,0.25,2); //Move Up To Cone
-        pivot(20,1); //Pivot Left So Camera Sees Cone
-        move(5.5,0,0.25,2);
-        //initVuforiaTFOD();
-        initTFOD();
-        //move(6.5,-90,0.25,2); //Move Left So Camera Sees Cone
-        Recognition cone = findCone();
-        move(-5.5,0,0.25,2);
-        pivot(-20,1); //Pivot Right Back To Middle
-        //move(6.5,85,0.25,2); //Move Right Back To Middle
-        if (cone != null) {
-            String type = cone.getLabel();
-            telemetry.addData("Type",type);telemetry.update();
-            if (type.equals("Green")) { //Actually Sees Purple (1)
-                coneType = type;
-                telemetry.addData("Type",coneType);telemetry.update();
-                move(9,180,0.25,2); //Move Back To Start
-                move(39,-90,0.25,2); //Move Left
-                move(38,0,0.25,2); //Go Straight
-            } else if (type.equals("Orange")) { //Sees Orange (2)
-                coneType = type;
-                telemetry.addData("Type",coneType);telemetry.update();
-                move(25,0,0.25,2); //Go Straight
-            } else if (type.equals("Purple")) { //Actually Sees Green (3)
-                coneType = type;
-                telemetry.addData("Type",coneType);telemetry.update();
-                move(9,180,0.25,2); //Move Back To Start
-                move(36,90,0.25,2); //Move Right
-                move(38,0,0.25,2); //Go Straight
-            } else {
-                randomPark();
-            }
-        } else {
-            randomPark();
-        }
-        CameraDevice.getInstance().setFlashTorchMode(false);
-    }
+//    public void navigateToCone() {
+//        initVuforia();
+//        move(12.5,0,0.25,2); //Move Up To Cone
+//        pivot(20,1); //Pivot Left So Camera Sees Cone
+//        move(5.5,0,0.25,2);
+//        //initVuforiaTFOD();
+//        initTFOD();
+//        //move(6.5,-90,0.25,2); //Move Left So Camera Sees Cone
+//        Recognition cone = findCone();
+//        move(-5.5,0,0.25,2);
+//        pivot(-20,1); //Pivot Right Back To Middle
+//        //move(6.5,85,0.25,2); //Move Right Back To Middle
+//        if (cone != null) {
+//            String type = cone.getLabel();
+//            telemetry.addData("Type",type);telemetry.update();
+//            if (type.equals("Green")) { //Actually Sees Purple (1)
+//                coneType = type;
+//                telemetry.addData("Type",coneType);telemetry.update();
+//                move(9,180,0.25,2); //Move Back To Start
+//                move(39,-90,0.25,2); //Move Left
+//                move(38,0,0.25,2); //Go Straight
+//            } else if (type.equals("Orange")) { //Sees Orange (2)
+//                coneType = type;
+//                telemetry.addData("Type",coneType);telemetry.update();
+//                move(25,0,0.25,2); //Go Straight
+//            } else if (type.equals("Purple")) { //Actually Sees Green (3)
+//                coneType = type;
+//                telemetry.addData("Type",coneType);telemetry.update();
+//                move(9,180,0.25,2); //Move Back To Start
+//                move(36,90,0.25,2); //Move Right
+//                move(38,0,0.25,2); //Go Straight
+//            } else {
+//                randomPark();
+//            }
+//        } else {
+//            randomPark();
+//        }
+//        CameraDevice.getInstance().setFlashTorchMode(false);
+//    }
 
-    public void randomPark() {
-        double randomPos = Math.ceil(Math.random()*2);
-        if (randomPos == 1) { //1
-            move(9,180,0.25,2); //Move Back To Start
-            move(39,-90,0.25,2); //Move Left
-            move(38,0,0.25,2); //Go Straight
-        } else if (randomPos == 3) { //2
-            move(25,0,0.25,2); //Go Straight
-        } else if (randomPos == 2) { //3
-            move(9,180,0.25,2); //Move Back To Start
-            move(36,90,0.25,2); //Move Right
-            move(38,0,0.25,2); //Go Straight
-        }
-        telemetry.addData("Type","Random");telemetry.update();
-    }
+//    public void randomPark() {
+//        double randomPos = Math.ceil(Math.random()*2);
+//        if (randomPos == 1) { //1
+//            move(9,180,0.25,2); //Move Back To Start
+//            move(39,-90,0.25,2); //Move Left
+//            move(38,0,0.25,2); //Go Straight
+//        } else if (randomPos == 3) { //2
+//            move(25,0,0.25,2); //Go Straight
+//        } else if (randomPos == 2) { //3
+//            move(9,180,0.25,2); //Move Back To Start
+//            move(36,90,0.25,2); //Move Right
+//            move(38,0,0.25,2); //Go Straight
+//        }
+//        telemetry.addData("Type","Random");telemetry.update();
+//    }
 
     /*@Deprecated
     // Method waits until it recognizes a duck (Recognitions are updates) and returns information. Method yeilds

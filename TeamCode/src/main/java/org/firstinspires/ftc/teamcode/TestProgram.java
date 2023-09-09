@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 public class TestProgram extends Autonomous {
     @Override
     public void runPath() {
-        initVuforiaTFOD();
+//        initVuforiaTFOD();
 
         sleep(50000000);
     }

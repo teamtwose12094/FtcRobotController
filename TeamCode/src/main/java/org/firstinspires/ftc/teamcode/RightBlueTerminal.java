@@ -8,7 +8,7 @@ public class RightBlueTerminal extends Autonomous {
         //move(24,90,1);
         //move(24,-90,1);
         //initVuforiaTFOD();
-        navigateToCone();
+//        navigateToCone();
 
         //Modified
         //move(32,0,1,2);

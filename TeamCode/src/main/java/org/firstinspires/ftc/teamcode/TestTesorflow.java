@@ -28,25 +28,25 @@ public class TestTesorflow extends LinearOpMode {
     VuforiaLocalizer vuforia  = null;
     TFObjectDetector tfod;
 
-    public void initVuforiaTFOD() {
-        //Vuforia
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        //TFOD
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.10f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        if (tfod != null) {
-            tfod.activate();
-            tfod.setZoom(1, 16.0/9.0);
-        }
-    }
+//    public void initVuforiaTFOD() {
+//        //Vuforia
+//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+//        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+//        //TFOD
+//        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+//        tfodParameters.minResultConfidence = 0.10f;
+//        tfodParameters.isModelTensorFlow2 = true;
+//        tfodParameters.inputSize = 320;
+//        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+//        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+//        if (tfod != null) {
+//            tfod.activate();
+//            tfod.setZoom(1, 16.0/9.0);
+//        }
+//    }
 
     // (Wait until specific thing is found)
     public Recognition findCone() {
@@ -127,7 +127,7 @@ public class TestTesorflow extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            initVuforiaTFOD();
+//            initVuforiaTFOD();
             navigateToCone();
             sleep(100000);
             tfod.shutdown();

@@ -254,12 +254,12 @@ public class Teleop extends LinearOpMode {
     // Initialize Vuforia and Tensorflow Object Detection
     // All encompassing method for initializng object recognition. Called prior to runpath in OP modes and after start has been pressed
     // Can this be ran prior to waitForStart()?
-    public void initVuforia() {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    }
+//    public void initVuforia() {
+//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+//        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+//    }
 }
 
 
